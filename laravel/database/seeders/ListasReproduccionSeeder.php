@@ -15,6 +15,6 @@ class ListasReproduccionSeeder extends Seeder
      */
     public function run()
     {
-        Listas_Reproduccion::create(['id_usuario' => 1, 'nombre_lista' => 'mipapa', 'id_contenido' => 1, 'fecha_creacion' => '2023-04-30']);
+        Listas_Reproduccion::create(['id_usuario' => 1, 'nombre_lista' => 'mipapa', 'id_contenido' => 1, 'updated_at' => null]);
     }
 }
