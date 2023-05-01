@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Listas_Reproduccion extends Model
 {
-    public $timestamps=false;
     use HasFactory;
     
     protected $fillable = [

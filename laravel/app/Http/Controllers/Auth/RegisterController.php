@@ -70,11 +70,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
  
- 
-        event(new \Illuminate\Auth\Events\Registered($user));
-     
-        $user->sendEmailVerificationNotification();
-      
+               
         return $user;
     }
  
