@@ -22,4 +22,12 @@ class Contenido extends Model
         'id_usuario'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_usuario');
+    }
+    public function categorias()
+    {
+       return $this->hasMany(Categoria::class, 'id_categoria');
+    }   
 }

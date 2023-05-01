@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\MailController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\ContenidosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,23 +18,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('mail/test', [MailController::class, 'test']);
 
-Route::get('/email/verify', function () {
-   return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-   $request->fulfill();
 
-   return redirect('/home');
-})->middleware(['auth', 'signed'])->name('verification.verify');
 
-Route::post('/email/verification-notification', function (Request $request) {
-   $request->user()->sendEmailVerificationNotification();
 
-   return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/', function (Request $request) {
    $message = 'Loading welcome page';
@@ -44,5 +32,11 @@ Route::get('/', function (Request $request) {
 });
 
 Auth::routes();
+require __DIR__.'/email-verify.php';
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('mail/test', [MailController::class, 'test']);
+
+
+Route::resource('contenidos', ContenidosController::class);
