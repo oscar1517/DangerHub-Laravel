@@ -16,7 +16,7 @@ class TokenController extends Controller
       
        return response()->json([
            "success" => true,
-           "user"    => $request->user(),
+           "user"    => $request->user()
         //    "roles"   => $user->getRoleNames(),
        ]);
     }

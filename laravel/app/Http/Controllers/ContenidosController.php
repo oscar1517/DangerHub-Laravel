@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Contenido;
 use App\Models\User;
+use App\Models\Guardados;
 use Illuminate\Support\Facades\Log;
 
 class ContenidosController extends Controller
@@ -14,7 +15,6 @@ class ContenidosController extends Controller
        
         return view("contenido.index", [
             "contenidos" => Contenido::all(),
-            'author' => $contenido->user,
         ]);
     }
     
@@ -45,9 +45,6 @@ class ContenidosController extends Controller
         $fecha_lanzamiento          = $request->get('fecha_lanzamiento');
         $id_categoria          = $request->get('id_categoria');
         
-        // Desar fitxer al disc i inserir dades a BD
-        $file = new File();
-        $fileOk = $file->diskSave($upload);
 
        
             // Desar dades a BD
@@ -72,7 +69,7 @@ class ContenidosController extends Controller
                 ->with('error', __('ERROR Uploading contenido'));
             }    
     }
-    public function show(Post $contenido)
+    public function show(Contenido $contenido)
     {
    
         return view("contenido.show", [
@@ -88,13 +85,11 @@ class ContenidosController extends Controller
 
         ]);
     }
-    public function edit(Post $contenido)
+    public function edit(Contenido $contenido)
     {
-        if(auth()->user()->id_usuario == $contenido->id_usuario){
+        if(auth()->user()->id == $contenido->id_usuario){
             return view("contenido.edit", [
-                'contenido'   => $contenido,
-                'author' => $contenido->user,
-                
+                'contenido'   => $contenido,                
             ]);
         }
         else{
@@ -102,7 +97,7 @@ class ContenidosController extends Controller
             ->with('error',__('traduct.error-post-edit'));
         }
     }
-    public function update(Request $request, Post $contenido)
+    public function update(Request $request, Contenido $contenido)
     {
         // Validar dades del formulari
         $validatedData = $request->validate([
@@ -135,8 +130,8 @@ class ContenidosController extends Controller
         $contenido->duracion = $duracion;
         $contenido->fecha_lanzamiento = $fecha_lanzamiento;
         $contenido->id_categoria = $id_categoria;
-        $post->save();
-        if ($post) {
+        $contenido->save();
+        if ($contenido) {
             Log::debug("DB storage OK");
             // Patró PRG amb missatge d'èxit
             return redirect()->route('contenido.show', $contenido)
@@ -147,9 +142,9 @@ class ContenidosController extends Controller
                 ->with('error', __('ERROR Uploading file'));
         }
     }
-    public function destroy(Post $contenido)
+    public function destroy(Contenido $contenido)
     {
-        if(auth()->user()->id_usuario == $contenido->id_usuario){
+        if(auth()->user()->id == $contenido->id_usuario){
             // Eliminar post de BD
             $contenido->delete();
             // Patró PRG amb missatge d'èxit
@@ -161,5 +156,25 @@ class ContenidosController extends Controller
             ->with('error',__('traduct.error-post-delete'));
         }
         
+    }
+
+    public function guardar(Contenido $contenido)
+    {
+
+        $user=User::find(auth()->user()->id);
+        $guardar = Guardados::create([
+            'id_user' => $user->id,
+            'id_contenido' => $contenido->id_contenido,
+        ]);
+        return redirect()->back();
+
+        
+    }
+    
+    public function quitarGuardados(Contenido $contenido)
+    {
+        Guardados::where('id_user',auth()->user()->id)
+                 ->where('id_contenido', $contenido->id_contenido )->delete();
+        return redirect()->back();
     }
 }
