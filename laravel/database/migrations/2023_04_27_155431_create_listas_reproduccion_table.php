@@ -14,12 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('listas__reproduccions', function (Blueprint $table) {
-            $table->bigIncrements('id_lista');
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->string('nombre_lista');
-            $table->unsignedBigInteger('id_contenido');
-            $table->foreign('id_contenido')->references('id_contenido')->on('contenidos');
             $table->nullableTimestamps();
         });
     }

@@ -11,8 +11,9 @@ class Guardados extends Model
     use HasFactory;
     
     protected $fillable = [
-        'id_user',
-        'id_contenido'
+        'id_usuario',
+        'id_contenido',
+        'id_lista'
     ];
 
 }

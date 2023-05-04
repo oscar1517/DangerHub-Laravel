@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->unsignedBigInteger('id_contenido');
-            $table->foreign('id_contenido')->references('id_contenido')->on('contenidos');
+            $table->foreign('id_contenido')->references('id')->on('contenidos');
             $table->integer('puntuacion');
             $table->timestamp('fecha_valoracion');
         });

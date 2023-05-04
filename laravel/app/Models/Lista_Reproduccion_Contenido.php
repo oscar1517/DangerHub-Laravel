@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Listas_Reproduccion extends Model
+class Lista_Reproduccion_Contenido extends Model
 {
+    public $timestamps=false;
     use HasFactory;
     
     protected $fillable = [
-        'id',
+        'id_contenido',
         'id_usuario',
-        'nombre_lista',
-        'fecha_creacion'
+        'id_lista'
     ];
 
 }

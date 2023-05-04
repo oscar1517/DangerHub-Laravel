@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Contenido;
 use App\Models\User;
 use App\Models\Categorias;
+use App\Models\Guardados;
 
 class ContenidosController extends Controller
 {
@@ -34,53 +35,47 @@ class ContenidosController extends Controller
     {
         // Validar fitxer
         $validatedData = $request->validate([
-            'upload' => 'required|mimes:gif,jpeg,jpg,png|max:2048'
+            'titulo'      => 'required',
+            'descripcion'    => 'required',
+            'url_imagen'  => 'required',
+            'url_video' => 'required',
+            'duracion' => 'required',
+            'fecha_lanzamiento' => 'required',
+            'id_categoria' => 'required',
+            'id_usuario' => 'required',
+            
         ]);
 
         // Obtenir dades del fitxer
-        $upload = $request->file('upload');
-        $fileName = $upload->getClientOriginalName();
-        $fileSize = $upload->getSize();
-        $body = $request->get('body'); 
-        $latitude = $request->get('latitude');
-        $longitude = $request->get('longitude'); 
-        $visibility_id = $request->get('visibility_id');
-        \Log::debug("Storing file '{$fileName}' ($fileSize)...");
- 
-        // Pujar fitxer al disc dur
-        $uploadName = time() . '_' . $fileName;
-        $filePath = $upload->storeAs(
-            'uploads',      // Path
-            $uploadName ,   // Filename
-            'public'        // Disk
-        );
+        $titulo          = $request->get('titulo');
+        $descripcion        = $request->get('descripcion');
+        $url_imagen      = $request->get('url_imagen');
+        $url_video     = $request->get('url_video');
+        $duracion    = $request->get('duracion');
+        $fecha_lanzamiento          = $request->get('fecha_lanzamiento');
+        $id_categoria          = $request->get('id_categoria');
+        $id_usuario         = $request->get('id_usuario');
+        $id_lista         = $request->get('id_lista');
+    
       
-        if (\Storage::disk('public')->exists($filePath)) {
-            \Log::debug("Local storage OK");
-            $fullPath = \Storage::disk('public')->path($filePath);
-            \Log::debug("File saved at {$fullPath}");
-
-            // Desar dades a BD
-            $file = File::create([
-                'filepath' => $filePath,
-                'filesize' => $fileSize,
+        if ($validatedData) {
+            $contenido = Contenido::create([
+                'titulo'      => $titulo,
+                'descripcion'   => $descripcion,
+                'url_imagen'  => $url_imagen,
+                'url_video' => $url_video,
+                'duracion' => $duracion,
+                'fecha_lanzamiento' => $fecha_lanzamiento,
+                'id_categoria' => $id_categoria,
+                'id_usuario' => $id_usuario,
+                'id_lista' => $id_lista,
             ]);
-            $post = Post::create([
-                'body' => $body,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'file_id' => $file->id,
-                'author_id' => auth()->user()->id,
-                'visibility_id' => $visibility_id,
-            ]);
-            \Log::debug("DB storage OK");
-            // Patró PRG amb missatge d'èxit
+            
             return response()->json([
                 'success' => true,
-                'data'    => $post
+                'data'    => $contenido
             ], 201);
-        } else {
-            \Log::debug("Local storage FAILS");
+       } else {
             return response()->json([
                 'success'  => false,
                 'message' => 'Error uploading file'
@@ -91,24 +86,88 @@ class ContenidosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $id_contenido
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        $contenido = Contenido::find($id);
+        if($contenido == null)
+        {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Error post not found'
+            ], 404);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data'    => $contenido
+            ], 200);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $id_contenido
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_contenido)
     {
-        //
+        $contenido = Contenido::find($id_contenido);
+
+        if($contenido)
+        {
+            // Validar fitxer
+            $validatedData = $request->validate([
+                'titulo'      => '',
+                'descripcion'    => '',
+                'url_imagen'  => '',
+                'url_video' => '',
+                'duracion' => '',
+                'fecha_lanzamiento' => '',
+                'id_categoria' => '',
+               
+            ]);
+
+            // Obtenir dades del fitxer
+            $titulo          = $request->get('titulo');
+            $descripcion        = $request->get('descripcion');
+            $url_imagen      = $request->get('url_imagen');
+            $url_video     = $request->get('url_video');
+            $duracion    = $request->get('duracion');
+            $fecha_lanzamiento          = $request->get('fecha_lanzamiento');
+            $id_categoria          = $request->get('id_categoria');
+         
+    
+        
+           if ($validatedData) {
+                $contenido->titulo      = $titulo;
+                $contenido->descripcion  = $descripcion;
+                $contenido->url_imagen = $url_imagen;
+                $contenido->url_video = $url_video;
+                $contenido->duracion = $duracion;
+                $contenido->fecha_lanzamiento = $fecha_lanzamiento;
+                $contenido->id_categoria = $id_categoria;
+                $contenido->save();
+               
+                return response()->json([
+                    'success' => true,
+                    'data'    => $contenido
+                ], 201);
+           } else {
+                return response()->json([
+                    'success'  => false,
+                    'message' => 'Error uploading post'
+                ], 500);
+            }
+        } else {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Error post not found'
+            ], 404);
+        }   
     }
 
     /**
@@ -119,6 +178,82 @@ class ContenidosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $contenido = Contenido::find($id);
+        
+        if($contenido == null)
+        {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Error post not found'
+            ], 404);
+        }else{
+            $contenido->delete();
+            return response()->json([
+                'success' => true,
+                'data'    => $contenido
+            ], 200);
+        }
+    }
+
+    public function guardar($id, $id_lista)
+    {
+        $contenido=Contenido::find($id);
+        
+        if (Guardados::where([
+                ['id_usuario', "=" , auth()->user()->id],
+                ['id_contenido', "=" ,$id],
+                ['id_lista', "=" ,$id_lista],
+            ])->exists()) {
+            return response()->json([
+                'success'  => false,
+                'message' => 'The post is already like'
+            ], 500);
+        }else{
+            $guardados = Guardados::create([
+                'id_usuario' => auth()->user()->id,
+                'id_contenido' => $id,
+                'id_lista' => $id_lista,
+            ]);
+            if (!is_null($id_lista)) {
+                $contenido->id_lista = $id_lista;
+                $contenido->save();
+            }
+            return response()->json([
+                'success' => true,
+                'data'    => $guardados
+            ], 200);
+        }     
+    }
+
+    public function quitarGuardados($id, $id_lista)
+    {
+        $contenido=Contenido::find($id);
+        if (Guardados::where([['id_usuario', "=" ,auth()->user()->id],['id_contenido', "=" ,$id],['id_lista', "=" ,$id_lista]])->exists()) {
+            
+            $guardado = Guardados::where([
+                ['id_usuario', "=" ,auth()->user()->id],
+                ['id_contenido', "=" ,$id],
+                ['id_lista', "=" ,$id_lista],
+            ]);
+            $guardado->first();
+    
+            $guardado->delete();
+            
+            if (!is_null($id_lista)) {
+                $contenido->id_lista = NULL;
+                $contenido->save();
+            }
+            return response()->json([
+                'success' => true,
+                'data'    => $contenido
+            ], 200);
+        }else{
+            return response()->json([
+                'success'  => false,
+                'message' => 'The post is not like'
+            ], 500);
+            
+        }  
+        
     }
 }

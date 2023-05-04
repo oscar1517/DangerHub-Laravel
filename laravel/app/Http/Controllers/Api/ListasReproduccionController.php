@@ -32,37 +32,28 @@ class ListasReproduccionController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar fitxer
+            // Validar datos
         $validatedData = $request->validate([
-            'nombre_lista'      => 'required',
-            'id_contenido'  => 'required',
+            'id_usuario' => 'required',
+            'nombre_lista' => 'required',
         ]);
 
-        // Obtenir dades del formulari
-        $nombre_lista          = $request->get('nombre_lista');
-        $id_contenido          = $request->get('id_contenido');
- 
+        // Obtener datos del formulario
+        $id_usuario = $request->get('id_usuario');
+        $nombre_lista = $request->get('nombre_lista');
+
        
+        $lista_reproduccion = Listas_Reproduccion::create([
+            'id_usuario' => $id_usuario,
+            'nombre_lista' => $nombre_lista,
+        ]);
+
       
-        if ($validatedData) {
-            $listas_reproduccion = Listas_Reproduccion::create([
-                'id_usuario' => auth()->user()->id_usuario,
-                'nombre_lista' => $nombre_lista,
-                'id_contenido' => $id_contenido,
-            ]);
-        
-            
-            return response()->json([
-                'success' => true,
-                'data'    => $listas_reproduccion
-            ], 201);
-        } else {
-            \Log::debug("Local storage FAILS");
-            return response()->json([
-                'success'  => false,
-                'message' => 'Error uploading file'
-            ], 500);
-        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $lista_reproduccion
+        ], 201);
     }
 
     /**
@@ -71,9 +62,9 @@ class ListasReproduccionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id_lista)
+    public function show($id)
     {
-        $listas_reproduccion = Listas_Reproduccion::find($id_lista);
+        $listas_reproduccion = Listas_Reproduccion::find($id);
         if($listas_reproduccion == null)
         {
             return response()->json([
@@ -95,24 +86,27 @@ class ListasReproduccionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id_lista)
+    public function update(Request $request, $id)
     {
-        $listas_reproduccion = Listas_Reproduccion::find($id_lista);
+        $listas_reproduccion = Listas_Reproduccion::find($id);
 
         if($listas_reproduccion)
         {
             // Validar fitxer
             $validatedData = $request->validate([
-                'nombre_lista'      => 'required',
-                'id_contenido'  => 'required',
+                'id_usuario' => $id_usuario,
+                'nombre_lista' => $nombre_lista,
+                'id_contenido' => $id_contenido,
             ]);
 
             // Obtenir dades del formulari
+            $id_usuario          = $request->get('id_usuario');
             $nombre_lista          = $request->get('nombre_lista');
             $id_contenido          = $request->get('id_contenido');
-    
+        
             
             if ($validatedData) {
+                $listas_reproduccion->id_usuario = $id_usuario;
                 $listas_reproduccion->nombre_lista = $nombre_lista;
                 $listas_reproduccion->id_contenido = $id_contenido;
                 $listas_reproduccion->save();
@@ -142,9 +136,9 @@ class ListasReproduccionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id_usuario)
+    public function destroy($id)
     {
-        $listas_reproduccion = Listas_Reproduccion::find($id_usuario);
+        $listas_reproduccion = Listas_Reproduccion::find($id);
         
         if($listas_reproduccion == null)
         {

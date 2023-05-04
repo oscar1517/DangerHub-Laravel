@@ -43,6 +43,10 @@ class User extends Authenticatable
 
     public function contenido()
     {
-       return $this->hasMany(Contenido::class, 'id_usuario');
+       return $this->hasMany(Contenido::class, 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'author_id');
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('contenido_categorias', function (Blueprint $table) {
             $table->unsignedBigInteger('id_contenido');
             $table->unsignedBigInteger('id_categoria');
-            $table->foreign('id_contenido')->references('id_contenido')->on('contenidos')->onDelete('cascade');
+            $table->foreign('id_contenido')->references('id')->on('contenidos')->onDelete('cascade');
             $table->foreign('id_categoria')->references('id_categoria')->on('categorias')->onDelete('cascade');
             $table->primary(['id_contenido', 'id_categoria']);
         });

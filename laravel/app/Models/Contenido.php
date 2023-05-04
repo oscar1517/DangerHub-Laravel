@@ -11,7 +11,7 @@ class Contenido extends Model
     use HasFactory;
     
     protected $fillable = [
-        'id_contenido',
+        'id',
         'titulo',
         'descripcion',
         'url_imagen',
@@ -19,12 +19,13 @@ class Contenido extends Model
         'duracion',
         'fecha_lanzamiento',
         'id_categoria',
-        'id_usuario'
+        'id_usuario',
+        'id_lista'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_usuario');
+        return $this->belongsTo(User::class, 'id');
     }
     public function categorias()
     {

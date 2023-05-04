@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Contenido;
 use App\Models\User;
 use App\Models\Guardados;
+use App\Models\Lista_Reproduccion_Contenido;
 use Illuminate\Support\Facades\Log;
 
 class ContenidosController extends Controller
@@ -158,14 +159,21 @@ class ContenidosController extends Controller
         
     }
 
-    public function guardar(Contenido $contenido)
+    public function guardar($id, $id_lista = null, $id_usuario)
     {
 
-        $user=User::find(auth()->user()->id);
+        // $user=User::find(auth()->user()->id);
         $guardar = Guardados::create([
-            'id_user' => $user->id,
-            'id_contenido' => $contenido->id_contenido,
+            'id_usuario' => $id_usuario,
+            'id_contenido' => $id,
+            'id_lista' => $id_lista,
         ]);
+
+        if (!is_null($id_lista)) {
+            $contenido->id_lista = $id_lista;
+            $contenido->save();
+        }
+
         return redirect()->back();
 
         
@@ -173,8 +181,12 @@ class ContenidosController extends Controller
     
     public function quitarGuardados(Contenido $contenido)
     {
-        Guardados::where('id_user',auth()->user()->id)
-                 ->where('id_contenido', $contenido->id_contenido )->delete();
+        Guardados::where('id_usuario', auth()->user()->id)
+             ->where('id_contenido', $contenido->id)
+             ->delete();
+
+        $contenido->id_lista = null;
+        $contenido->save();
         return redirect()->back();
     }
 }
