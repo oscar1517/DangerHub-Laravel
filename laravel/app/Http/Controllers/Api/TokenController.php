@@ -27,6 +27,7 @@ class TokenController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
+            'id_suscripcion' => 'required',
         ]);
 
         if ($data) {
@@ -34,6 +35,7 @@ class TokenController extends Controller
                 'name'     => $data['name'],
                 'email'    => $data['email'],
                 'password' => Hash::make($data['password']),
+                'id_suscripcion'    => $data['id_suscripcion'],
             ]);
             // $user->assignRole('author');
 
@@ -89,4 +91,3 @@ class TokenController extends Controller
     }    
     
 }
-

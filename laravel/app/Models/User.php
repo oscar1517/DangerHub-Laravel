@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Perfiles;
+use App\Models\Contenido;
 
 class User extends Authenticatable
 {
@@ -20,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'numero_perfiles',
+        'id_suscripcion',
     ];
 
     /**
@@ -49,4 +53,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+    public function perfiles()
+{
+    return $this->hasMany(Perfiles::class, 'id_usuario');
+}
 }

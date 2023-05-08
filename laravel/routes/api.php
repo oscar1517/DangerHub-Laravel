@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ListasReproduccionController;
 use App\Http\Controllers\Api\TokenController;
 use App\Http\Controllers\Api\ContenidosController;
+use App\Http\Controllers\Api\PerfilesController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,3 +30,4 @@ Route::apiResource('contenidos', ContenidosController::class);
 Route::post('/contenidos/{contenido}/guardar/{id_lista}', [ContenidosController::class, 'guardar'])->middleware('auth:sanctum');
 Route::delete('/contenidos/{contenido}/guardar/{id_lista}', [ContenidosController::class, 'quitarGuardados'])->middleware('auth:sanctum');
 Route::apiResource('listas_reproduccion', ListasReproduccionController::class);
+Route::apiResource('perfiles', PerfilesController::class);

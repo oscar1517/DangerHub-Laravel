@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Perfiles extends Model
 {
@@ -12,6 +13,12 @@ class Perfiles extends Model
     protected $fillable = [
         'id_perfil',
         'nombre',
+        'url_avatar',
         'id_usuario'
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'id');
+    }
 }

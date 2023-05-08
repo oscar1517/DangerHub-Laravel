@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('perfiles', function (Blueprint $table) {
             $table->bigIncrements('id_perfil');
             $table->string('nombre');
+            $table->string('url_avatar');
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
