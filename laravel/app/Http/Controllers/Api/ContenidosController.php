@@ -256,4 +256,28 @@ class ContenidosController extends Controller
         }  
         
     }
+    public function peliculas()
+    {
+        $contenidos = Contenido::where('id_categoria', 1)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $contenidos,
+        ], 200);
+    }
+    public function series()
+    {
+        $contenidos = Contenido::where('id_categoria', 2)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $contenidos,
+        ], 200);
+    }
+    public function documentales()
+    {
+        $contenidos = Contenido::where('id_categoria', 3)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $contenidos,
+        ], 200);
+    }
 }
