@@ -30,4 +30,4 @@ Route::apiResource('contenidos', ContenidosController::class);
 Route::post('/contenidos/{contenido}/guardar/{id_lista}', [ContenidosController::class, 'guardar'])->middleware('auth:sanctum');
 Route::delete('/contenidos/{contenido}/guardar/{id_lista}', [ContenidosController::class, 'quitarGuardados'])->middleware('auth:sanctum');
 Route::apiResource('listas_reproduccion', ListasReproduccionController::class);
-Route::apiResource('perfiles', PerfilesController::class);
+Route::apiResource('perfiles', PerfilesController::class)->middleware('auth:sanctum');

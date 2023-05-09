@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Perfiles;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class PerfilesController extends Controller
 {
@@ -16,7 +17,8 @@ class PerfilesController extends Controller
      */
     public function index()
     {
-        $perfiles = Perfiles::all();
+        $id_usuario = auth()->user()->id;
+        $perfiles = Perfiles::where('id_usuario', $id_usuario)->get();
         return response()->json([
             'success' => true,
             'data' => $perfiles,
@@ -34,15 +36,14 @@ class PerfilesController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'required',
             'url_avatar' => 'required',
-            'id_usuario' => [
-                'required',
+            'id_usuario' => 
                 function ($attribute, $value, $fail) {
                     $user = User::find($value);
                     if ($user->numero_perfiles >= 4) {
                         $fail('Este usuario ya tiene el número máximo de perfiles permitidos.');
                     }
                 },
-            ],
+            
         ]);
 
         if ($validator->fails()) {
@@ -53,11 +54,12 @@ class PerfilesController extends Controller
         }
         $nombre          = $request->get('nombre');
         $url_avatar        = $request->get('url_avatar');
-        
+        $id_usuario        = auth()->user()->id;
         if ($validator) {
             $perfiles = Perfiles::create([
                 'nombre'      => $nombre,
                 'url_avatar'   => $url_avatar,
+                'id_usuario'   => $id_usuario,
             ]);
             
             return response()->json([
@@ -85,7 +87,7 @@ class PerfilesController extends Controller
         {
             return response()->json([
                 'success'  => false,
-                'message' => 'Error post not found'
+                'message' => 'Error perfil not found'
             ], 404);
         } else {
             return response()->json([

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('perfiles', function (Blueprint $table) {
-            $table->bigIncrements('id_perfil');
+            $table->bigIncrements('id');
             $table->string('nombre');
             $table->string('url_avatar');
             $table->unsignedBigInteger('id_usuario');
