@@ -54,7 +54,7 @@ class ContenidosController extends Controller
         $duracion    = $request->get('duracion');
         $fecha_lanzamiento          = $request->get('fecha_lanzamiento');
         $id_categoria          = $request->get('id_categoria');
-        $id_usuario         = $request->get('id_usuario');
+        $id_usuario         = auth()->user()->id;
         $id_lista         = $request->get('id_lista');
     
       
