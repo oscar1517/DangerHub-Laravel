@@ -54,7 +54,7 @@ class ContenidosController extends Controller
         $duracion    = $request->get('duracion');
         $fecha_lanzamiento          = $request->get('fecha_lanzamiento');
         $id_categoria          = $request->get('id_categoria');
-        $id_usuario         = $request->get('id_usuario');
+        $id_usuario         = auth()->user()->id;
         $id_lista         = $request->get('id_lista');
     
       
@@ -255,5 +255,29 @@ class ContenidosController extends Controller
             
         }  
         
+    }
+    public function peliculas()
+    {
+        $contenidos = Contenido::where('id_categoria', 1)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $contenidos,
+        ], 200);
+    }
+    public function series()
+    {
+        $contenidos = Contenido::where('id_categoria', 2)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $contenidos,
+        ], 200);
+    }
+    public function documentales()
+    {
+        $contenidos = Contenido::where('id_categoria', 3)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $contenidos,
+        ], 200);
     }
 }
