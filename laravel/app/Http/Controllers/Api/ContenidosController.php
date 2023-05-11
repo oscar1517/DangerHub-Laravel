@@ -42,7 +42,6 @@ class ContenidosController extends Controller
             'duracion' => 'required',
             'fecha_lanzamiento' => 'required',
             'id_categoria' => 'required',
-            'id_usuario' => 'required',
             
         ]);
 
