@@ -11,9 +11,9 @@ class Listas_Reproduccion extends Model
     
     protected $fillable = [
         'id',
-        'id_usuario',
+        'id_perfil',
         'nombre_lista',
-        'fecha_creacion'
+        'fecha_creacion',
     ];
 
 }

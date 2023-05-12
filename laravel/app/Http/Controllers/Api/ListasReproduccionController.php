@@ -17,7 +17,8 @@ class ListasReproduccionController extends Controller
      */
     public function index()
     {
-        $listas_reproduccion = Listas_Reproduccion::all();
+        $id_usuario = auth()->user()->id;
+        $listas_reproduccion = Listas_Reproduccion::where('id_usuario', $id_usuario)->get();
         return response()->json([
             'success' => true,
             'data' => $listas_reproduccion,
@@ -34,17 +35,19 @@ class ListasReproduccionController extends Controller
     {
             // Validar datos
         $validatedData = $request->validate([
-            'id_usuario' => 'required',
             'nombre_lista' => 'required',
+            'id_perfil' => '',
         ]);
-
+        
+        $perfil = auth()->user()->perfiles->first();
+        // $id_perfil = $perfil->id;
+        $id_perfil = $request->get('id_perfil');
         // Obtener datos del formulario
-        $id_usuario = $request->get('id_usuario');
         $nombre_lista = $request->get('nombre_lista');
 
        
         $lista_reproduccion = Listas_Reproduccion::create([
-            'id_usuario' => $id_usuario,
+            'id_perfil' => $id_perfil,
             'nombre_lista' => $nombre_lista,
         ]);
 
@@ -147,7 +150,7 @@ class ListasReproduccionController extends Controller
                 'message' => 'Error post not found'
             ], 404);
         }else{
-            $post->delete();
+            $listas_reproduccion->delete();
             return response()->json([
                 'success' => true,
                 'data'    => $listas_reproduccion

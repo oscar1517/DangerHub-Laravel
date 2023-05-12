@@ -257,10 +257,19 @@ class ContenidosController extends Controller
     }
     public function peliculas()
     {
+        
         $contenidos = Contenido::where('id_categoria', 1)->get();
         return response()->json([
             'success' => true,
             'data' => $contenidos,
+        ], 200);
+    }
+    public function peliculasId($id)
+    {
+        $contenido = Contenido::find($id);
+        return response()->json([
+            'success' => true,
+            'data' => $contenido,
         ], 200);
     }
     public function series()

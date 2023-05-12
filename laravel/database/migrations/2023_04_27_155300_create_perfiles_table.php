@@ -17,8 +17,6 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('nombre');
             $table->string('url_avatar');
-            $table->unsignedBigInteger('id_usuario');
-            $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

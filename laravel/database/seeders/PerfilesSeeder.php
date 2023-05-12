@@ -15,7 +15,7 @@ class PerfilesSeeder extends Seeder
      */
     public function run()
     {
-        Perfiles::create(['nombre' => 'fgdgdgdfgdfdg', 'url_avatar' => 'https://i.blogs.es/ceda9c/dalle/450_1000.jpg', 'id_usuario' => 2]);
+        Perfiles::create(['nombre' => 'oscar', 'url_avatar' => 'https://i.blogs.es/ceda9c/dalle/450_1000.jpg', 'id_usuario' => 1]);
 
     }
 }

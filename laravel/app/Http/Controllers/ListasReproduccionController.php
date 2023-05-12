@@ -28,21 +28,20 @@ class ListasReproduccionController extends Controller
         // Validar dades del formulari
         $validatedData = $request->validate([
             'nombre_lista'      => 'required',
-            'id_contenido'  => 'required',
         ]);
         
+        $perfil = auth()->user()->perfiles->first();
+        $id_perfil = $perfil->id;
         // Obtenir dades del formulari
         $nombre_lista          = $request->get('nombre_lista');
-        $id_contenido          = $request->get('id_contenido');
     
 
         if ($request) {
             // Desar dades a BD
             Log::debug("Saving post at DB...");
             $Listas_Reproduccion = Listas_Reproduccion::create([
-                'id_usuario'   => auth()->user()->id_usuario,
+                'id_perfil' => $id_perfil,
                 'nombre_lista'  => $nombre_lista,
-                'id_contenido' => $id_contenido,
             ]);
             Log::debug("DB storage OK");
             // Patró PRG amb missatge d'èxit

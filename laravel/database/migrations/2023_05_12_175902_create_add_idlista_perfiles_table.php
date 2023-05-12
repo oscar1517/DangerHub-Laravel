@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('listas__reproduccions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_perfil');
-            $table->foreign('id_perfil')->references('id')->on('perfiles');
-            $table->string('nombre_lista');
-            $table->nullableTimestamps();
+        Schema::table('perfiles', function (Blueprint $table) {
+            $table->unsignedBigInteger('id_usuario')->after('url_avatar');
+            $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('listas_reproduccion');
+        Schema::dropIfExists('add_idlista_perfiles');
     }
 };

@@ -29,8 +29,9 @@ Route::post('/logout', [TokenController::class, 'logout'])->middleware('auth:san
 Route::apiResource('contenidos', ContenidosController::class)->middleware('auth:sanctum');
 Route::post('/contenidos/{contenido}/guardar/{id_lista}', [ContenidosController::class, 'guardar'])->middleware('auth:sanctum');
 Route::delete('/contenidos/{contenido}/guardar/{id_lista}', [ContenidosController::class, 'quitarGuardados'])->middleware('auth:sanctum');
-Route::apiResource('listas_reproduccion', ListasReproduccionController::class);
+Route::apiResource('listas_reproduccion', ListasReproduccionController::class)->middleware('auth:sanctum');
 Route::apiResource('perfiles', PerfilesController::class)->middleware('auth:sanctum');
 Route::get('/peliculas', [ContenidosController::class, 'peliculas'])->middleware('auth:sanctum');
+Route::get('/peliculas/{pelicula}', [ContenidosController::class, 'peliculasId'])->middleware('auth:sanctum');
 Route::get('/series', [ContenidosController::class, 'series'])->middleware('auth:sanctum');;
 Route::get('/documentales', [ContenidosController::class, 'documentales'])->middleware('auth:sanctum');

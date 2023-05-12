@@ -54,7 +54,8 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'author_id');
     }
     public function perfiles()
-{
-    return $this->hasMany(Perfiles::class, 'id_usuario');
-}
+    {
+        return $this->hasMany(Perfiles::class, 'id');
+    }
+    
 }
