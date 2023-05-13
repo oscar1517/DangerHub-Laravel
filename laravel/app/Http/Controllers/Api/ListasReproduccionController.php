@@ -15,10 +15,12 @@ class ListasReproduccionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $id_usuario = auth()->user()->id;
-        $listas_reproduccion = Listas_Reproduccion::where('id_usuario', $id_usuario)->get();
+        $user = auth()->user();
+        $perfil = $user->perfiles()->where('id_usuario', $user->id)->get();
+        $id_perfil = $perfil->id; 
+        $listas_reproduccion = Listas_Reproduccion::where('id_perfil', $id_perfil)->get();
         return response()->json([
             'success' => true,
             'data' => $listas_reproduccion,
@@ -41,7 +43,7 @@ class ListasReproduccionController extends Controller
         
         $perfil = auth()->user()->perfiles->first();
         // $id_perfil = $perfil->id;
-        $id_perfil = $request->get('id_perfil');
+        // $id_perfil = $request->get('id_perfil');
         // Obtener datos del formulario
         $nombre_lista = $request->get('nombre_lista');
 

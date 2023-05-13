@@ -267,9 +267,14 @@ class ContenidosController extends Controller
     public function peliculasId($id)
     {
         $contenido = Contenido::find($id);
+        $id_usuario = User::find($contenido->id_usuario);
+        $user = $id_usuario->name;
         return response()->json([
             'success' => true,
-            'data' => $contenido,
+            'data' => [
+                'contenido' => $contenido,
+                'user' => $user,
+            ],
         ], 200);
     }
     public function series()

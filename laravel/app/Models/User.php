@@ -55,7 +55,7 @@ class User extends Authenticatable
     }
     public function perfiles()
     {
-        return $this->hasMany(Perfiles::class, 'id');
+        return $this->hasMany(Perfiles::class, 'id_usuario');
     }
     
 }

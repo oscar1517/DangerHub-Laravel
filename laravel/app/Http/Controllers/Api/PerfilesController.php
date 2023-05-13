@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Perfiles;
 use App\Models\User;
+use App\Models\Listas_Reproduccion;
 use Illuminate\Support\Facades\Validator;
 
 class PerfilesController extends Controller
@@ -55,11 +56,28 @@ class PerfilesController extends Controller
         $nombre          = $request->get('nombre');
         $url_avatar        = $request->get('url_avatar');
         $id_usuario        = auth()->user()->id;
+
+        
+
         if ($validator) {
+            $user = User::find($id_usuario);
+            if ($user->numero_perfiles >= 4) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Este usuario ya tiene el número máximo de perfiles permitidos.'
+                ], 400);
+            }
+            $user->numero_perfiles++;
+            $user->save();
             $perfiles = Perfiles::create([
                 'nombre'      => $nombre,
                 'url_avatar'   => $url_avatar,
                 'id_usuario'   => $id_usuario,
+            ]);
+            $id_perfil = $perfiles->id;
+            $listas_reproduccion = Listas_Reproduccion::create([
+                'nombre_lista' => $nombre,
+                'id_perfil' => $id_perfil,
             ]);
             
             return response()->json([
@@ -156,7 +174,8 @@ class PerfilesController extends Controller
     public function destroy($id_perfil)
     {
         $perfiles = Perfiles::find($id_perfil);
-        
+        $listas_reproduccion = Listas_Reproduccion::find($id_perfil);
+
         if($perfiles == null)
         {
             return response()->json([
@@ -164,7 +183,13 @@ class PerfilesController extends Controller
                 'message' => 'Error post not found'
             ], 404);
         }else{
+            $listas_reproduccion->delete();
             $perfiles->delete();
+
+            $user = auth()->user();
+            $user->numero_perfiles -= 1;
+            $user->save();
+
             return response()->json([
                 'success' => true,
                 'data'    => $perfiles
