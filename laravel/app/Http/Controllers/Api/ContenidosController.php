@@ -194,12 +194,12 @@ class ContenidosController extends Controller
         }
     }
 
-    public function guardar($id, $id_lista)
+    public function guardar($id, $id_lista, $id_perfil)
     {
         $contenido=Contenido::find($id);
         
         if (Guardados::where([
-                ['id_usuario', "=" , auth()->user()->id],
+                ['id_perfil', "=" , $id_perfil],
                 ['id_contenido', "=" ,$id],
                 ['id_lista', "=" ,$id_lista],
             ])->exists()) {
@@ -209,7 +209,7 @@ class ContenidosController extends Controller
             ], 500);
         }else{
             $guardados = Guardados::create([
-                'id_usuario' => auth()->user()->id,
+                'id_perfil' => $id_perfil,
                 'id_contenido' => $id,
                 'id_lista' => $id_lista,
             ]);
@@ -224,7 +224,7 @@ class ContenidosController extends Controller
         }     
     }
 
-    public function quitarGuardados($id, $id_lista)
+    public function quitarGuardados($id, $id_lista, $id_perfil)
     {
         $contenido=Contenido::find($id);
         if (Guardados::where([['id_usuario', "=" ,auth()->user()->id],['id_contenido', "=" ,$id],['id_lista', "=" ,$id_lista]])->exists()) {
@@ -263,6 +263,23 @@ class ContenidosController extends Controller
             'success' => true,
             'data' => $contenidos,
         ], 200);
+    }
+    public function contenidosGuardados($id_lista)
+    {
+        
+        $guardados = Guardados::where('id_lista', $id_lista)->get();
+        if($guardados == null)
+        {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Error post not found'
+            ], 404);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data'    => $guardados
+            ], 200);
+        }
     }
     public function peliculasId($id)
     {
