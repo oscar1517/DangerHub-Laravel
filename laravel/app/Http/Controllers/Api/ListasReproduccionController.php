@@ -15,11 +15,9 @@ class ListasReproduccionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $user = auth()->user();
-        $perfil = $user->perfiles()->where('id_usuario', $user->id)->get();
-        $id_perfil = $perfil->id; 
+        
         $listas_reproduccion = Listas_Reproduccion::where('id_perfil', $id_perfil)->get();
         return response()->json([
             'success' => true,
