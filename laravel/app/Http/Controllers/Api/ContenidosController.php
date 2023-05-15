@@ -275,9 +275,12 @@ class ContenidosController extends Controller
                 'message' => 'Error post not found'
             ], 404);
         } else {
+            $contenidos = $guardados->map(function ($guardado) {
+                return $guardado->contenido;
+            });
             return response()->json([
                 'success' => true,
-                'data'    => $guardados
+                'data'    => $contenidos
             ], 200);
         }
     }

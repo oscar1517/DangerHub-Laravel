@@ -19,7 +19,7 @@ class Guardados extends Model
 
     public function contenido()
     {
-        return $this->hasMany(Contenido::class, 'id');
+        return $this->hasMany(Contenido::class, 'id_contenido');
     }
 
 }
