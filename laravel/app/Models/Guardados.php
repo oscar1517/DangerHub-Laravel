@@ -13,13 +13,13 @@ class Guardados extends Model
     
     protected $fillable = [
         'id_perfil',
-        'id_contenido',
-        'id_lista'
+        'id_lista',
+        'id_contenido'
     ];
 
     public function contenido()
     {
-        return $this->hasMany(Contenido::class, 'id_contenido');
+        return $this->belongsTo(Contenido::class, 'id_contenido');
     }
 
 }

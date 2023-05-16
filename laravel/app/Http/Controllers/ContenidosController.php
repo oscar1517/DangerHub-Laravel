@@ -29,6 +29,7 @@ class ContenidosController extends Controller
         $validatedData = $request->validate([
             'titulo'      => 'required',
             'descripcion'    => 'required',
+            'descripcionLarga'    => 'required',
             'url_imagen'  => 'required',
             'url_video' => 'required',
             'duracion' => 'required',
@@ -39,7 +40,8 @@ class ContenidosController extends Controller
         
         // Obtenir dades del formulari
         $titulo          = $request->get('titulo');
-        $descripcion        = $request->file('descripcion');
+        $descripcion        = $request->get('descripcion');
+        $descripcionLarga        = $request->file('descripcionLarga');
         $url_imagen      = $request->get('url_imagen');
         $url_video     = $request->get('url_video');
         $duracion    = $request->get('duracion');
@@ -53,6 +55,7 @@ class ContenidosController extends Controller
             $contenido = Contenido::create([
                 'titulo'      => $titulo,
                 'descripcion'   => $descripcion,
+                'descripcionLarga'   => $descripcionLarga,
                 'url_imagen'  => $url_imagen,
                 'url_video' => $url_video,
                 'duracion' => $duracion,
@@ -77,6 +80,7 @@ class ContenidosController extends Controller
             'contenido'   => $contenido,
             'titulo'   => $contenido->titulo,
             'descripcion' => $contenido->descripcion,
+            'descripcionLarga' => $contenido->descripcionLarga,
             'url_imagen' => $contenido->url_imagen,
             'url_video' => $contenido->url_video,
             'duracion' => $contenido->duracion,
@@ -104,6 +108,7 @@ class ContenidosController extends Controller
         $validatedData = $request->validate([
             'titulo'      => 'required',
             'descripcion'    => 'required',
+            'descripcionLarga'    => 'descripcionLarga',
             'url_imagen'  => 'required',
             'url_video' => 'required',
             'duracion' => 'required',
@@ -113,7 +118,8 @@ class ContenidosController extends Controller
 
         // Obtenir dades del formulari
         $titulo          = $request->get('titulo');
-        $descripcion        = $request->file('descripcion');
+        $descripcion        = $request->get('descripcion');
+        $descripcionLarga        = $request->get('descripcionLarga');
         $url_imagen      = $request->get('url_imagen');
         $url_video     = $request->get('url_video');
         $duracion    = $request->get('duracion');
@@ -126,6 +132,7 @@ class ContenidosController extends Controller
         Log::debug("Updating DB...");
         $contenido->titulo      = $titulo;
         $contenido->descripcion  = $descripcion;
+        $contenido->descripcionLarga  = $descripcionLarga;
         $contenido->url_imagen = $url_imagen;
         $contenido->url_video = $url_video;
         $contenido->duracion = $duracion;
@@ -168,15 +175,7 @@ class ContenidosController extends Controller
             'id_contenido' => $id,
             'id_lista' => $id_lista,
         ]);
-
-        if (!is_null($id_lista)) {
-            $contenido->id_lista = $id_lista;
-            $contenido->save();
-        }
-
         return redirect()->back();
-
-        
     }
     
     public function quitarGuardados(Contenido $contenido)
@@ -185,8 +184,6 @@ class ContenidosController extends Controller
              ->where('id_contenido', $contenido->id)
              ->delete();
 
-        $contenido->id_lista = null;
-        $contenido->save();
         return redirect()->back();
     }
 }

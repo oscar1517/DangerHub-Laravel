@@ -37,6 +37,7 @@ class ContenidosController extends Controller
         $validatedData = $request->validate([
             'titulo'      => 'required',
             'descripcion'    => 'required',
+            'descripcionLarga'    => 'required',
             'url_imagen'  => 'required',
             'url_video' => 'required',
             'duracion' => 'required',
@@ -48,26 +49,26 @@ class ContenidosController extends Controller
         // Obtenir dades del fitxer
         $titulo          = $request->get('titulo');
         $descripcion        = $request->get('descripcion');
+        $descripcionLarga        = $request->get('descripcionLarga');
         $url_imagen      = $request->get('url_imagen');
         $url_video     = $request->get('url_video');
         $duracion    = $request->get('duracion');
         $fecha_lanzamiento          = $request->get('fecha_lanzamiento');
         $id_categoria          = $request->get('id_categoria');
         $id_usuario         = auth()->user()->id;
-        $id_lista         = $request->get('id_lista');
     
       
         if ($validatedData) {
             $contenido = Contenido::create([
                 'titulo'      => $titulo,
                 'descripcion'   => $descripcion,
+                'descripcionLarga'   => $descripcionLarga,
                 'url_imagen'  => $url_imagen,
                 'url_video' => $url_video,
                 'duracion' => $duracion,
                 'fecha_lanzamiento' => $fecha_lanzamiento,
                 'id_categoria' => $id_categoria,
                 'id_usuario' => $id_usuario,
-                'id_lista' => $id_lista,
             ]);
             
             return response()->json([
@@ -122,6 +123,7 @@ class ContenidosController extends Controller
             $validatedData = $request->validate([
                 'titulo'      => '',
                 'descripcion'    => '',
+                'descripcionLarga'    => '',
                 'url_imagen'  => '',
                 'url_video' => '',
                 'duracion' => '',
@@ -133,6 +135,7 @@ class ContenidosController extends Controller
             // Obtenir dades del fitxer
             $titulo          = $request->get('titulo');
             $descripcion        = $request->get('descripcion');
+            $descripcionLarga        = $request->get('descripcionLarga');
             $url_imagen      = $request->get('url_imagen');
             $url_video     = $request->get('url_video');
             $duracion    = $request->get('duracion');
@@ -144,6 +147,7 @@ class ContenidosController extends Controller
            if ($validatedData) {
                 $contenido->titulo      = $titulo;
                 $contenido->descripcion  = $descripcion;
+                $contenido->descripcionLarga  = $descripcionLarga;
                 $contenido->url_imagen = $url_imagen;
                 $contenido->url_video = $url_video;
                 $contenido->duracion = $duracion;
@@ -213,10 +217,7 @@ class ContenidosController extends Controller
                 'id_contenido' => $id,
                 'id_lista' => $id_lista,
             ]);
-            if (!is_null($id_lista)) {
-                $contenido->id_lista = $id_lista;
-                $contenido->save();
-            }
+            
             return response()->json([
                 'success' => true,
                 'data'    => $guardados
@@ -227,10 +228,10 @@ class ContenidosController extends Controller
     public function quitarGuardados($id, $id_lista, $id_perfil)
     {
         $contenido=Contenido::find($id);
-        if (Guardados::where([['id_usuario', "=" ,auth()->user()->id],['id_contenido', "=" ,$id],['id_lista', "=" ,$id_lista]])->exists()) {
+        if (Guardados::where([['id_perfil', "=" ,$id_perfil],['id_contenido', "=" ,$id],['id_lista', "=" ,$id_lista]])->exists()) {
             
             $guardado = Guardados::where([
-                ['id_usuario', "=" ,auth()->user()->id],
+                ['id_perfil', "=" , $id_perfil],
                 ['id_contenido', "=" ,$id],
                 ['id_lista', "=" ,$id_lista],
             ]);
@@ -238,10 +239,7 @@ class ContenidosController extends Controller
     
             $guardado->delete();
             
-            if (!is_null($id_lista)) {
-                $contenido->id_lista = NULL;
-                $contenido->save();
-            }
+            
             return response()->json([
                 'success' => true,
                 'data'    => $contenido
@@ -264,26 +262,7 @@ class ContenidosController extends Controller
             'data' => $contenidos,
         ], 200);
     }
-    public function contenidosGuardados($id_lista)
-    {
-        
-        $guardados = Guardados::where('id_lista', $id_lista)->get();
-        if($guardados == null)
-        {
-            return response()->json([
-                'success'  => false,
-                'message' => 'Error post not found'
-            ], 404);
-        } else {
-            $contenidos = $guardados->map(function ($guardado) {
-                return $guardado->contenido;
-            });
-            return response()->json([
-                'success' => true,
-                'data'    => $contenidos
-            ], 200);
-        }
-    }
+    
     public function peliculasId($id)
     {
         $contenido = Contenido::find($id);
@@ -312,5 +291,25 @@ class ContenidosController extends Controller
             'success' => true,
             'data' => $contenidos,
         ], 200);
+    }
+    public function contenidosGuardados($id_lista)
+    {
+        
+        $guardados = Guardados::with('contenido')->where('id_lista', $id_lista)->get();
+        if($guardados == null)
+        {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Error post not found'
+            ], 404);
+        } else {
+            $contenidos = $guardados->map(function ($guardado) {
+                return $guardado->contenido;
+            });
+            return response()->json([
+                'success' => true,
+                'data'    => $contenidos,
+            ], 200);
+        }
     }
 }

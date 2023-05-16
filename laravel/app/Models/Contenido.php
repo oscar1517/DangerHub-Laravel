@@ -14,13 +14,13 @@ class Contenido extends Model
         'id',
         'titulo',
         'descripcion',
+        'descripcionLarga',
         'url_imagen',
         'url_video',
         'duracion',
         'fecha_lanzamiento',
         'id_categoria',
         'id_usuario',
-        'id_lista'
     ];
 
     public function user()

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('titulo');
             $table->string('descripcion');
+            $table->string('descripcionLarga', 1000);
             $table->string('url_imagen');
             $table->string('url_video');
             $table->time('duracion');
@@ -25,8 +26,6 @@ return new class extends Migration
             $table->foreign('id_categoria')->references('id_categoria')->on('categorias');
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id')->on('users');
-            $table->unsignedBigInteger('id_lista')->nullable();
-            $table->foreign('id_lista')->references('id')->on('listas__reproduccions');
         });
     }
 
