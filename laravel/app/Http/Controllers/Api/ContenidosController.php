@@ -33,17 +33,24 @@ class ContenidosController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar fitxer
         $validatedData = $request->validate([
-            'titulo'      => 'required',
-            'descripcion'    => 'required',
-            'descripcionLarga'    => 'required',
-            'url_imagen'  => 'required',
+            'titulo' => 'required',
+            'descripcion' => 'required',
+            'descripcionLarga' => 'required',
+            'url_imagen' => 'required',
             'url_video' => 'required',
             'duracion' => 'required',
             'fecha_lanzamiento' => 'required',
             'id_categoria' => 'required',
-            
+        ], [
+            'titulo.required' => 'El campo título es obligatorio.',
+            'descripcion.required' => 'El campo descripción es obligatorio.',
+            'descripcionLarga.required' => 'El campo descripción larga es obligatorio.',
+            'url_imagen.required' => 'El campo URL de la imagen es obligatorio.',
+            'url_video.required' => 'El campo URL del video es obligatorio.',
+            'duracion.required' => 'El campo duración es obligatorio.',
+            'fecha_lanzamiento.required' => 'El campo fecha de lanzamiento es obligatorio.',
+            'id_categoria.required' => 'El campo categoría es obligatorio.',
         ]);
 
         // Obtenir dades del fitxer
