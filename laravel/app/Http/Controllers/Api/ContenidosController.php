@@ -283,6 +283,27 @@ class ContenidosController extends Controller
             ],
         ], 200);
     }
+    public function peliculasUsuario($id)
+    {
+        $usuario = User::find($id);
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado.',
+            ], 404);
+        }
+
+        $contenidos = Contenido::where('id_usuario', $id)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'usuario' => $usuario,
+                'contenidos' => $contenidos,
+            ],
+        ], 200);
+    }
     public function series()
     {
         $contenidos = Contenido::where('id_categoria', 2)->get();

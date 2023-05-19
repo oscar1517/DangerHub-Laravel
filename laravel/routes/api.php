@@ -34,5 +34,6 @@ Route::apiResource('listas_reproduccion', ListasReproduccionController::class)->
 Route::apiResource('perfiles', PerfilesController::class)->middleware('auth:sanctum');
 Route::get('/peliculas', [ContenidosController::class, 'peliculas'])->middleware('auth:sanctum');
 Route::get('/peliculas/{pelicula}', [ContenidosController::class, 'peliculasId'])->middleware('auth:sanctum');
+Route::get('/peliculas/user/{id_usuario}', [ContenidosController::class, 'peliculasUsuario'])->middleware('auth:sanctum');
 Route::get('/series', [ContenidosController::class, 'series'])->middleware('auth:sanctum');;
 Route::get('/documentales', [ContenidosController::class, 'documentales'])->middleware('auth:sanctum');
